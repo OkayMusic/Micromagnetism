@@ -1,7 +1,7 @@
 gap = 1; from = 0; to = 10;
 % BEGIN DEFINING PHYSICAL PARAMETERS
 STIFF_CONST = 1;
-DM_CONST = 2;
+DM_CONST = 1;
 BOUNDARY = 0; % 1 = Periodic, 0 = isolated/thin film
 B_FIELD = [0,0,0];
 TEMPERATURE = 0.00;
