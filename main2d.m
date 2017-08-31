@@ -1,45 +1,39 @@
-gap = 1; from = 0; to = 10;
+close all
+gap = 1; from = 1; to = 20;
 % BEGIN DEFINING PHYSICAL PARAMETERS
 STIFF_CONST = 1;
-DM_CONST = 1;
+DM_CONST = 0;
 BOUNDARY = 0; % 1 = Periodic, 0 = isolated/thin film
 B_FIELD = [0,0,0];
 TEMPERATURE = 0.00;
-SURF_CONST = 1;
+SURF_CONST = 0;
+DELTA = pi;
 
 PARAMS = [STIFF_CONST, DM_CONST, BOUNDARY, B_FIELD, TEMPERATURE,...
     SURF_CONST];
 
-[X, Y, Z] = meshgrid(from:gap:to, 1,1);
+[X, Y, Z] = meshgrid(from:gap:to, from:gap:to, 1);
 vol = size(X);
-
-close all
-
-DELTA = pi;
-figure
-
-% for temp = 1:20
 theta = pi*rand(vol(1), vol(2));
 phi = 2*pi*rand(vol(1), vol(2));
-%     B_FIELD = [0,0,0];
-    PARAMS = [STIFF_CONST, DM_CONST, BOUNDARY, B_FIELD, TEMPERATURE];
-% for field = 1:15
+
+figure
 
 for k=1:1000
-for i=1:vol(1)
-    for j=1:vol(2)
-        a = randi(vol(1)); b = randi(vol(2));
-        [theta(a, b), phi(a, b)] =...
-            wiggle(theta, phi, a, b, pi/8*rand, PARAMS);
+  [X_coords, Y_coords] = get_coords(theta, phi);
+    for i=1:vol(1)*vol(2)
+      a = X_coords(i); b = Y_coords(i);
+      [theta(a, b), phi(a, b)] =...
+          wiggle(theta, phi, a, b, pi/8*rand, PARAMS);
     end
-end
 
-makeplot(X, Y, Z, theta, phi)
+  makeplot(X, Y, Z, theta, phi)
 
-if DELTA >  pi * 0.3
-    DELTA = DELTA/1.01;
+  if DELTA >  pi * 0.3
+      DELTA = DELTA/1.01;
+  end
 end
-end
+close all
 % Mx = sin(theta).*cos(phi);
 % My = sin(theta).*sin(phi);
 % Mz = cos(theta);
