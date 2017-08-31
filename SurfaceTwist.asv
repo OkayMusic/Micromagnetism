@@ -1,0 +1,120 @@
+function SurfaceTwist
+stiffness_constant = 1;
+
+gap = 4; from = -5; to = 5;
+
+[X, Y, Z] = meshgrid(from:gap:to, from:gap:to, from:gap:0);
+vol = size(X);
+Z_plt = zeros(vol(1), vol(2));
+
+
+
+theta = pi*rand(vol(1), vol(2), vol(3)); 
+phi = 2*pi*rand(vol(1), vol(2), vol(3));
+
+Mx = cos(phi).*sin(theta);
+My = sin(phi).*sin(theta);
+Mz = -cos(theta);
+% M = cat(3, Mx, My, Mz); 
+
+dM_dx(:,:,:,1) = diff(Mx, 1, 2)./gap; 
+dM_dx(:,:,:,2) = diff(My, 1, 2)./gap; 
+dM_dx(:,:,:,3) = diff(Mz, 1, 2)./gap;
+dM_dx = dM_dx(1:vol(1)-1,:, 1:vol(3)-1,:);
+dM_dy(:,:,:,1) = diff(Mx, 1, 1)./gap;   
+dM_dy(:,:,:,2) = diff(My, 1, 1)./gap;   
+dM_dy(:,:,:,3) = diff(Mz, 1, 1)./gap;
+dM_dy = dM_dy(:,1:vol(2)-1, 1:vol(3)-1,:);
+dM_dz(:,:,:,1) = diff(Mx, 1, 3)./gap;   
+dM_dz(:,:,:,2) = diff(My, 1, 3)./gap;   
+dM_dz(:,:,:,3) = diff(Mz, 1, 3)./gap;
+dM_dz = dM_dz(1:vol(1)-1,1:vol(2)-1,:,:);
+
+% Exchange energy term
+E_x = sum(sum(sum(cat(1, dM_dx.^2,  dM_dy.^2, dM_dz.^2))));
+
+% ------------------- BORING COLOURMAP STUFF -----------------------------%
+% ------------------- BORING COLOURMAP STUFF -----------------------------%
+% ------------------- BORING COLOURMAP STUFF -----------------------------%
+
+
+figure
+q = quiver3(X(:,:,end), Y(:,:,end), Z(:,:,end), Mx(:,:,end), My(:,:,end), Mz(:,:,end));
+mags = Mz;
+currentColormap = colormap(winter);
+
+% Now determine the color to make each arrow using a colormap
+[~, ~, ind] = histcounts(mags, size(currentColormap, 1));
+
+% Now map this to a colormap to get RGB
+cmap = uint8(ind2rgb(ind(:), currentColormap) * 255);
+cmap(:,:,4) = 255;
+cmap = permute(repmat(cmap, [1 3 1]), [2 1 3]);
+
+% We repeat each color 3 times (using 1:3 below) because each arrow has 3 vertices
+set(q.Head, ...
+    'ColorBinding', 'interpolated', ...
+    'ColorData', reshape(cmap(1:3,:,:), [], 4).');   %'
+
+% We repeat each color 2 times (using 1:2 below) because each tail has 2 vertices
+set(q.Tail, ...
+    'ColorBinding', 'interpolated', ...
+    'ColorData', reshape(cmap(1:2,:,:), [], 4).');
+view(0,90);
+
+
+% ------------------- BORING COLOURMAP STUFF END -------------------------%
+% ------------------- BORING COLOURMAP STUFF END -------------------------%
+% ------------------- BORING COLOURMAP STUFF END -------------------------%
+
+
+for i=1:vol(1)
+    for j = 1:vol(2)
+    
+        theta_n = theta; theta_n(, ri2, ri3) = pi*rand;
+        phi_n = phi; phi_n(ri1, ri2, ri3) = 2*pi*rand;
+
+        Mx_n = cos(phi_n).*sin(theta_n);
+        My_n = sin(phi_n).*sin(theta_n);
+        Mz_n = -cos(theta_n);
+
+
+        dM_dx_n(:,:,:,1) = diff(Mx_n, 1, 2)./gap; 
+        dM_dx_n(:,:,:,2) = diff(My_n, 1, 2)./gap; 
+        dM_dx_n(:,:,:,3) = diff(Mz_n, 1, 2)./gap;
+        dM_dx_n = dM_dx_n(1:vol(1)-1,:, 1:vol(3)-1,:);
+        dM_dy_n(:,:,:,1) = diff(Mx_n, 1, 1)./gap;   
+        dM_dy_n(:,:,:,2) = diff(My_n, 1, 1)./gap;   
+        dM_dy_n(:,:,:,3) = diff(Mz_n, 1, 1)./gap;
+        dM_dy_n = dM_dy_n(:,1:vol(2)-1, 1:vol(3)-1,:);
+        dM_dz_n(:,:,:,1) = diff(Mx_n, 1, 3)./gap;   
+        dM_dz_n(:,:,:,2) = diff(My_n, 1, 3)./gap;   
+        dM_dz_n(:,:,:,3) = diff(Mz_n, 1, 3)./gap;
+        dM_dz_n = dM_dz_n(1:vol(1)-1,1:vol(2)-1,:,:);
+
+        E_x_n = sum(sum(sum(cat(1, dM_dx_n.^2,  dM_dy_n.^2, dM_dz_n.^2))));
+
+        if E_x_n < E_x   
+            phi = phi_n;
+            theta = theta_n;
+            Mx = Mx_n;
+            My = My_n;
+            Mz = Mz_n;
+            dM_dx = dM_dx_n;
+            dM_dy = dM_dy_n;
+            dM_dz = dM_dz_n;
+            E_x = E_x_n;
+        end
+
+    %     quiver3(X(:,:,end), Y(:,:,end), Z(:,:,end), Mx(:,:,end), My(:,:,end), Mz(:,:,end));
+    %     view(0,90);
+    %     pause(.00001);
+
+        clear dM_dx_n;
+        clear dM_dy_n;
+        clear dM_dz_n;
+    
+    end
+end
+q = quiver3(X(:,:,end), Y(:,:,end), Z(:,:,end), Mx(:,:,end), My(:,:,end), Mz(:,:,end));
+end
