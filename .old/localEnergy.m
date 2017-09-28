@@ -38,9 +38,6 @@ switch BOUNDARY
         end
 end
 
-% The following functions calculate the energy due to various interactions
-% Currently included are: Exchange interaction, DM interaction + Zeeman
-
 % Here [l,m] define the direction in which derivatives are being taken.
 % E.g. choosing hk = ab, lm = a+1, b => derivatives in +ve y direction only
 % This is so it can still work with spins on the edge of the grid
