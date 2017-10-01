@@ -10,16 +10,30 @@ from mpl_toolkits.mplot3d import Axes3D
 from numpy.random import rand, randint
 from scipy.fftpack import fft, ifft
 
-from subprocess import call
+import mag_engine
 
 # GLOBAL STUFF
-parameters = {'dimension':2., 'size':30**2, 'stiff_const':-1, 'dm_const':0.,
-    'boundary':0., 'b_field':[0, 0, 0.], 'temperature':0.001, 'surf_const':0.,
+parameters = {'dimension':1, 'size':2**2, 'stiff_const':-1, 'dm_const':0.,
+    'boundary':0., 'b_field':[0, 0, 1.], 'temperature':0.001, 'surf_const':0.,
     'Lambda':30., 'alpha':48.*np.pi/180.}
+#
+# dimension = 2
+# size = 30**2
+# stiff_const = -1.
+# dm_const = 0.
+# boundary = 0
+# b_field = []
 
 variables = {'T':0, 'P':0, 'X':0, 'Y':0, 'Z':0}
 
 plotters = {'background':0, 'qui':0, 'surf':0}
+
+def get_parameter_list():
+    a = [parameters[keys] for keys in parameters]
+    b = [variables[keys] for keys in variables]
+    for elements in b:
+        a.append(elements)
+    return a
 
 def make_grid():
     size = parameters['size']
@@ -203,8 +217,10 @@ def plot_ft():
 if __name__ == "__main__":
     variables['X'], variables['Y'], variables['Z'] = make_grid()
     variables['T'], variables['P'] = rand_spins()
-    iterations = 5000
-
-    init_plot()
-
-    main_loop(iterations)
+    print(variables['T'])
+    # iterations = 5000
+    #
+    # init_plot()
+    #
+    # main_loop(iterations)
+    print(mag_engine.reduce_energy())
