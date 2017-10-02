@@ -23,9 +23,7 @@ static PyObject *reduce_energy(PyObject *self, PyObject *args)
 {
   get_parameters();
   get_variables();
-  double the_test = T[0][0];
-  printf("The test: %f\n", the_test);
-  
+
   return Py_BuildValue("d", T[0][0]);
 }
 

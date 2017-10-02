@@ -16,15 +16,11 @@ import mag_engine
 parameters = {'dimension':1, 'size':2**2, 'stiff_const':-1, 'dm_const':0.,
     'boundary':0., 'b_field':[0, 0, 1.], 'temperature':0.001, 'surf_const':0.,
     'Lambda':30., 'alpha':48.*np.pi/180.}
-#
-# dimension = 2
-# size = 30**2
-# stiff_const = -1.
-# dm_const = 0.
-# boundary = 0
-# b_field = []
 
 variables = {'T':0, 'P':0, 'X':0, 'Y':0, 'Z':0}
+
+# Define global lists which will contain the list versions of T & P for c.
+c_T = []; c_P = [];
 
 plotters = {'background':0, 'qui':0, 'surf':0}
 
@@ -63,6 +59,12 @@ def sph_to_cart():
     theta = variables['T']
     phi = variables['P']
     return np.sin(theta)*np.cos(phi), np.sin(theta)*np.sin(phi), np.cos(theta)
+
+def array_to_list():
+    global c_T
+    global c_P
+    c_T = [list(x) for x in variables['T']]
+    c_P = [list(x) for x in variables['P']]
 
 def wiggle(a, b):
     theta, phi = variables['T'], variables['P']
@@ -217,7 +219,9 @@ def plot_ft():
 if __name__ == "__main__":
     variables['X'], variables['Y'], variables['Z'] = make_grid()
     variables['T'], variables['P'] = rand_spins()
-    print(variables['T'])
+
+    array_to_list()
+    print(c_T)
     # iterations = 5000
     #
     # init_plot()

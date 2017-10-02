@@ -7,24 +7,24 @@
 // variables.
 void get_variables(void)
 {
-  PyObject *PyMain = PyImport_AddModule("__main__");
-  PyObject *dict   = PyObject_GetAttrString(PyMain, "variables");
+  PyObject *PyMain     = PyImport_AddModule("__main__");
+  PyObject *theta_list = PyObject_GetAttrString(PyMain, "c_T");
+  PyObject *phi_list   = PyObject_GetAttrString(PyMain, "c_P");
 
-  PyObject *theta_list = PyDict_GetItemString(dict, "T");
-  PyObject *phi_list = PyDict_GetItemString(dict, "P");
-  // theta_list = PyList_GetItem(theta_list, 0);
-  // phi_list = PyList_GetItem(phi_list, 0);
+  a = PyFloat_AsDouble(PyList_GetItem(PyList_GetItem(theta_list, 3), 0));
 
   switch(dimension){
     case 1:
+    // THIS DOESN'T WORK :(((
       T  = malloc(size * sizeof(double));
       *T = malloc(sizeof(double));
       P  = malloc(size * sizeof(double));
       *P = malloc(sizeof(double));
+
       for (int i = 0; i < size; i++){
-        T[0][i] = PyFloat_AsDouble((PyList_GetItem(theta_list, i)));
-        P[0][i] = PyFloat_AsDouble((PyList_GetItem(phi_list, i)));
-        printf("%f\n", P[0][i]);
+        T[0][i] = list_2d_to_double(theta_list, i, 0);
+        P[0][i] = list_2d_to_double(phi_list, i, 0);
+        printf("%f\n", T[0][i]);
       }
 
     case 2:
@@ -35,8 +35,8 @@ void get_variables(void)
       *P = malloc(size * sizeof(double));
       for (int i = 0; i < size; i++){
         for (int j = 0; j < size; j++){
-          T[0][0]=1;
-          P[0][0]=1;
+          T[0][0]=1.0f;
+          P[0][0]=1.0f;
         }
       }
 

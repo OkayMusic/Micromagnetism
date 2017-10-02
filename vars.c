@@ -14,3 +14,5 @@ double b_field_z;
 
 double** T;
 double** P;
+
+double a;
