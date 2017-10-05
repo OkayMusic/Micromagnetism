@@ -15,4 +15,7 @@ double b_field_z;
 double** T;
 double** P;
 
+double*** T_point;
+double*** P_point;
+
 double a;

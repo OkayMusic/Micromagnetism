@@ -11,15 +11,15 @@ void get_variables(void)
   PyObject *theta_list = PyObject_GetAttrString(PyMain, "c_T");
   PyObject *phi_list   = PyObject_GetAttrString(PyMain, "c_P");
 
-  a = PyFloat_AsDouble(PyList_GetItem(PyList_GetItem(theta_list, 3), 0));
+  // a = PyFloat_AsDouble(PyList_GetItem(PyList_GetItem(theta_list, 3), 0));
 
   switch(dimension){
     case 1:
     // THIS DOESN'T WORK :(((
-      T  = malloc(size * sizeof(double));
-      *T = malloc(sizeof(double));
-      P  = malloc(size * sizeof(double));
-      *P = malloc(sizeof(double));
+      *T_point  = malloc(size * sizeof(double));
+      **T_point = malloc(sizeof(double));
+      *P_point  = malloc(size * sizeof(double));
+      **P_point = malloc(sizeof(double));
 
       for (int i = 0; i < size; i++){
         T[0][i] = list_2d_to_double(theta_list, i, 0);

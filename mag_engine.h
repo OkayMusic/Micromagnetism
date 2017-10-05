@@ -26,6 +26,8 @@ extern double b_field_z;
 
 extern double** T;
 extern double** P;
+extern double*** T_point;
+extern double*** P_point;
 
 extern double a;
 
